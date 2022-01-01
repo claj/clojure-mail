@@ -78,7 +78,7 @@ Note that the messages returned are Java mail message objects.
 (def message (m/read-message javamail-message))
 
 ;; There are also individual methods available in the message namespace. I.e to read the subject
-;; of a javax.mail message
+;; of a jakarta.mail message
 (message/subject javamail-message)
 
 ;; You can also select only the fields you require
