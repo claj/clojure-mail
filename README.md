@@ -34,14 +34,44 @@ This is a complete example showing how to read the subject of your latest Gmail 
 
 ```
 
-## Use
+## QuickStart with Protonmail Bridge
 
-We need to require clojure-mail.core before we begin.
+[Protonmail](https://protonmail.com/) is a secure mail service whose business model is to sell well working email services, not targeted advertisments.
+
+To make ProtonMail accounts work with locally running mail clients (like Thunderbird etc), Protonmail asks you to install [Protonmail Bridge](https://protonmail.com/bridge/), which serves acts as a customized proxy to access the mailservers. Given the seemingly endless security problems that can occur with IMAP/SMTP-configurations I think this is a neat solution and highly usables solution that gives me high confidence in the security of the system.
+
+It is quite easy to get working with Clojure-mail as well:
 
 ```clojure
-(:require [clojure-mail.core :as m]
-          [clojure-mail.message :as message])
+(ns myproject.core
+  (:require [clojure-mail.core :as m]
+            [clojure-mail.message :refer [read-message]]))
+
+;; these details can be found in
+;; Protonmail Bridge -> Account name -> Mailbox configuration
+
+(def hostname "127.0.0.1")
+(def port 1143) ;; could differ on your machine
+(def username "username@protonmail.com")
+
+;;; NOTE: This is a generated password used only locally
+;;; DONT put your precious protonmail password in your clojure code.
+(def password "password-generated-by-protonmail-bridge")
+
+
+(def the-store (m/store "imap" [hostname port] username password))
+
+;; inbox returns a list of messages
+(m/inbox the-store)
+
+;; how many messages in my inbox?
+(count (m/inbox the-store))
+
+;; return a clojure data structure of the first mail in the inbox.
+(read-message (first (m/inbox the-store)))
 ```
+
+## Getting started with Gmail + OAuth2
 
 The first thing we need is a mail store which acts as a gateway to our IMAP account.
 
