@@ -8,6 +8,8 @@ A clojure library for parsing, downloading and reading email from IMAP servers.
 
 ## Quickstart
 
+Note: to be able to use a gmail account safetly, you have to use Oauth2-tokens.
+
 This is a complete example showing how to read the subject of your latest Gmail inbox message
 
 ```clojure
