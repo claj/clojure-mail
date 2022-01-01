@@ -24,7 +24,7 @@ This is a complete example showing how to read the subject of your latest Gmail 
 
 ;; to convert a javamail message into a clojure message we need to call read-message
 
-(def latest (m/read-message (first inbox-messages)))
+(def latest (read-message (first inbox-messages)))
 
 ;; Let's read the subject of our latest inbox message
 (:subject latest)
