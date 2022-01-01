@@ -12,17 +12,17 @@ This is a complete example showing how to read the subject of your latest Gmail 
 
 ```clojure
 (ns myproject.core
-  (:require [clojure-mail.core :refer :all]
+  (:require [clojure-mail.core :as m]
             [clojure-mail.gmail :as gmail]
             [clojure-mail.message :refer (read-message)]))
 
 (def gstore (gmail/store "user@gmail.com" "password"))
 
-(def inbox-messages (inbox gstore))
+(def inbox-messages (m/inbox gstore))
 
 ;; to convert a javamail message into a clojure message we need to call read-message
 
-(def latest (read-message (first inbox-messages)))
+(def latest (m/read-message (first inbox-messages)))
 
 ;; Let's read the subject of our latest inbox message
 (:subject latest)
@@ -37,26 +37,26 @@ This is a complete example showing how to read the subject of your latest Gmail 
 We need to require clojure-mail.core before we begin.
 
 ```clojure
-(:require [clojure-mail.core :refer :all]
+(:require [clojure-mail.core :as m]
           [clojure-mail.message :as message])
 ```
 
 The first thing we need is a mail store which acts as a gateway to our IMAP account.
 
 ```clojure
-(def store (store "imap.gmail.com" "user@gmail.com" "password"))
+(def store (m/store "imap.gmail.com" "user@gmail.com" "password"))
 ```
 
 You can also authenticate using an Oauth token.
 
 ```clojure
-(def store (xoauth2-store "imap.gmail.com" "user@gmail.com" "user-oauth-token"))
+(def store (m/xoauth2-store "imap.gmail.com" "user@gmail.com" "user-oauth-token"))
 ```
 
 Now we can fetch email messages easily.
 
 ```clojure
-(def my-inbox-messages (take 5 (all-messages store "inbox")))
+(def my-inbox-messages (take 5 (m/all-messages store "inbox")))
 
 (def first-message (first my-inbox-messages))
 
@@ -73,14 +73,14 @@ Note that the messages returned are Java mail message objects.
 (def javamail-message (first inbox-messages))
 
 ;; To read the entire message as a clojure map
-(def message (read-message javamail-message))
+(def message (m/read-message javamail-message))
 
 ;; There are also individual methods available in the message namespace. I.e to read the subject
 ;; of a javax.mail message
 (message/subject javamail-message)
 
 ;; You can also select only the fields you require
-(def message (read-message javamail-message :fields [:id :to :subject]))
+(def message (m/read-message javamail-message :fields [:id :to :subject]))
 
 ```
 
@@ -111,10 +111,10 @@ You can easily search your inbox for messages
 
 ```clojure
 (def s (gen-store "user@gmail.com" "password"))
-(def results (search-inbox s "projects"))
-(def results (search-inbox s [:body "projects" :subject "projects"]))
-(def results (search-inbox s :body "projects" :received-before :yesterday))
-(def results (search-inbox s :body "projects" :from "john@example.com"))
+(def results (m/search-inbox s "projects"))
+(def results (m/search-inbox s [:body "projects" :subject "projects"]))
+(def results (m/search-inbox s :body "projects" :received-before :yesterday))
+(def results (m/search-inbox s :body "projects" :from "john@example.com"))
 
 (->> results first subject) ;; => "Open Source Customisation Projects"
 ```
@@ -125,9 +125,9 @@ HTML emails are evil. There is a simple HTML -> Plain text parser provided if yo
 do any machine learning type processing on email messages.
 
 ```clojure
-(require '[clojure-mail.parser :refer :all])
+(require '[clojure-mail.parser :as mp])
 
-(html->text "<h1>I HATE HTML EMAILS</h1>")
+(mp/html->text "<h1>I HATE HTML EMAILS</h1>")
 
 ;; => "I HATE HTML EMAILS"
 
@@ -172,9 +172,9 @@ Clojure mail can be used to parse existing email messages from file. Take a look
 
 ```clojure
 
-(def message (file->message "test/clojure_mail/fixtures/25"))
+(def message (m/file->message "test/clojure_mail/fixtures/25"))
 
-(read-message message)
+(m/read-message message)
 
 ;; =>
 ;; {:subject "Request to share ContractsBuilder",
