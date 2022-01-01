@@ -1,8 +1,8 @@
 (ns clojure-mail.helpers.greenmail
   "Some functions to make easier to create integration testing with GreenMail."
   (:import [com.icegreen.greenmail.util GreenMail ServerSetupTest]
-           [javax.mail Session Message$RecipientType]
-           [javax.mail.internet InternetAddress MimeMessage MimeMessage$RecipientType]
+           [jakarta.mail Session Message$RecipientType]
+           [jakarta.mail.internet InternetAddress MimeMessage MimeMessage$RecipientType]
            (java.util Properties)))
 
 (defn start-greenmail!

@@ -4,10 +4,10 @@
             [clojure-mail.message :refer [read-message]]
             [clojure-mail.folder :as folder])
   (:import [java.util Properties]
-           [javax.mail.search FlagTerm]
+           [jakarta.mail.search FlagTerm]
            [java.io FileInputStream File]
-           [javax.mail.internet MimeMessage]
-           [javax.mail Session
+           [jakarta.mail.internet MimeMessage]
+           [jakarta.mail Session
             Folder
             Flags
             Flags$Flag AuthenticationFailedException]
@@ -213,14 +213,14 @@
 
 (defn all-messages
   "Given a store and folder returns all messages
-   reversed so the newest messages come first. 
+   reversed so the newest messages come first.
   If since-uid is provided, return all messages with newer or equal uid"
   ([folder-name] (all-messages *store* folder-name))
   ([^IMAPStore store folder-name & {:keys [since-uid]}]
    (let [folder (open-folder store folder-name :readonly)]
      (->> (if-not since-uid
             (.getMessages folder)
-            (.getMessagesByUID folder since-uid javax.mail.UIDFolder/LASTUID))
+            (.getMessagesByUID folder since-uid jakarta.mail.UIDFolder/LASTUID))
           reverse))))
 
 (defn inbox

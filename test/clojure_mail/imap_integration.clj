@@ -3,7 +3,7 @@
             [clojure-mail.core :refer :all]
             [clojure-mail.message :as message]
             [clojure-mail.helpers.fixtures :as fxt])
-  (:import (javax.mail AuthenticationFailedException)))
+  (:import (jakarta.mail AuthenticationFailedException)))
 
 (use-fixtures :once (fxt/make-gm-fixture :imap))
 
@@ -32,7 +32,7 @@
   ;; Test below disabled since authentication failures seem to genearate a runaway thread
   ;; in the IMAP server
   ;; TODO Investigate GreenMail e-mail thread and enable test
-  #_(testing "A javax.mail.AuthenticationFailedException is thrown if credentials are not correct."
+  #_(testing "A jakarta.mail.AuthenticationFailedException is thrown if credentials are not correct."
       (let [port (fxt/get-server-port :imap)]
         (is (thrown? AuthenticationFailedException
                      (store "imap" ["localhost" port] "user1" "bad-password"))))))

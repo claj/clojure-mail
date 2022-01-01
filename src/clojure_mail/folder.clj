@@ -1,10 +1,10 @@
 (ns clojure-mail.folder
   (:refer-clojure :exclude [list])
-  (:import [javax.mail.search SearchTerm OrTerm AndTerm SubjectTerm HeaderTerm BodyTerm RecipientStringTerm FromStringTerm FlagTerm ReceivedDateTerm SentDateTerm ComparisonTerm]
+  (:import [jakarta.mail.search SearchTerm OrTerm AndTerm SubjectTerm HeaderTerm BodyTerm RecipientStringTerm FromStringTerm FlagTerm ReceivedDateTerm SentDateTerm ComparisonTerm]
            (com.sun.mail.imap IMAPFolder IMAPFolder$FetchProfileItem IMAPMessage)
            (java.text SimpleDateFormat)
            (java.util Calendar)
-           (javax.mail FetchProfile FetchProfile$Item Flags Flags$Flag Message$RecipientType)))
+           (jakarta.mail FetchProfile FetchProfile$Item Flags Flags$Flag Message$RecipientType)))
 
 ;; Note that the get folder fn is part of the store namespace
 
@@ -127,13 +127,13 @@
 (defn build-search-terms
   "This creates a search condition. Input is a sequence of message part conditions or flags or header conditions.
    Possible message part condititon is: (:from|:cc|:bcc|:to|:subject|:body) value or date condition.
-   Date condition is: (:received-before|:received-after|:received-on|:sent-before|:sent-after|:sent-on) date. 
+   Date condition is: (:received-before|:received-after|:received-on|:sent-before|:sent-after|:sent-on) date.
    Header condition is: :header (header-name-string header-value, ...)
    Supported flags are: :answered?, :deleted?, :draft?, :recent?, :flagged? :seen?. Minus sign at the beginning of flag tests for negated flag value (ex. :-answered? not answered messages).
 
-   Terms on the same level is connected with and-ed, if value is a sequence, then those values are or-ed. 
-    
-   Examples: 
+   Terms on the same level is connected with and-ed, if value is a sequence, then those values are or-ed.
+
+   Examples:
     (:body \"foo\" :body \"bar\") - body should match both values.
     (:body [\"foo\" \"bar\"]) - body should match one of the values.
     (:body \"foo\" :from \"john@exmaple.com\") - body should match foo and email is sent by john."
