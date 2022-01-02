@@ -1,6 +1,6 @@
-(defproject io.forward/clojure-mail "1.0.8"
+(defproject io.github.claj/clojure-mail "2.0.0-alpha-1"
   :description "Clojure Email Library"
-  :url "https://github.com/forward/clojure-mail"
+  :url "https://github.com/claj/clojure-mail"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.3"]
