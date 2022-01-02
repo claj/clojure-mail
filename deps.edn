@@ -1,0 +1,6 @@
+{:deps {org.clojure/clojure {:mvn/version "1.10.3"}
+
+        org.jsoup/jsoup {:mvn/version "1.14.3"} ;; for cleaning up messy html messages
+        com.sun.mail/jakarta.mail {:mvn/version "2.0.1"}
+        medley/medley {:mvn/version "1.3.0"}}
+ :paths ["src"]}
