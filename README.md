@@ -1,46 +1,43 @@
 # Clojure-mail
 
+A clojure library for parsing, downloading and reading email from IMAP servers.
+
+## Original package by owainlewis
+
 ![](https://travis-ci.org/owainlewis/clojure-mail.svg?branch=master)
 
 [![Clojars Project](http://clojars.org/io.forward/clojure-mail/latest-version.svg#)](http://clojars.org/io.forward/clojure-mail)
 
-A clojure library for parsing, downloading and reading email from IMAP servers.
+## Add this dependency to your project
 
-## Quickstart
-
-Note: to be able to use a gmail account safetly, you have to use Oauth2-tokens.
-
-This is a complete example showing how to read the subject of your latest Gmail inbox message
+I have not published my fork on Clojars (at least not yet). A `deps.edn` coordinate looks like this:
 
 ```clojure
-(ns myproject.core
-  (:require [clojure-mail.core :as m]
-            [clojure-mail.gmail :as gmail]
-            [clojure-mail.message :refer (read-message)]))
-
-(def gstore (gmail/store "user@gmail.com" "password"))
-
-(def inbox-messages (m/inbox gstore))
-
-;; to convert a javamail message into a clojure message we need to call read-message
-
-(def latest (read-message (first inbox-messages)))
-
-;; Let's read the subject of our latest inbox message
-(:subject latest)
-
-(keys latest)
-;; => (:id :to :cc :bcc :from :sender :subject :date-sent :date-recieved :multipart? :content-type :body :headers)
-
+{:deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        com.github.claj/clojure-mail {:git/tag "v2.0.0-alpha-1"
+                                      :git/sha "77dfdfa5b92e43e8ff015d3f0c0244e6d7098d13"}}}
 ```
+
+## Why fork clojure-mail?
+
+I forked clojure-mail on 1 jan 2022 because
+
+- there was no activity in the original project for quite some time
+- the README was confusing
+- the described authentication methods for gmail accounts was outdated
+- the original dependencies (Jakarta Mail) had made quite large changes
+
+I also suspected there where problems with SSL/TLS in the older Jakarta Mail packages since there has been API changes in the more recent versions of the JVM, but I was probably wrong about this.
 
 ## QuickStart with Protonmail Bridge
 
-[Protonmail](https://protonmail.com/) is a secure mail service whose business model is to sell well working email services, not targeted advertisments.
+Example confirmed working 2021-01-01.
 
-To make ProtonMail accounts work with locally running mail clients (like Thunderbird etc), Protonmail asks you to install [Protonmail Bridge](https://protonmail.com/bridge/), which serves acts as a customized proxy to access the mailservers. Given the seemingly endless security problems that can occur with IMAP/SMTP-configurations I think this is a neat solution and highly usables solution that gives me high confidence in the security of the system.
+[Protonmail](https://protonmail.com/) is a secure mail service whose business model is to sell well working email services, not targeted advertisments. Reasonable free tiers exists.
 
-It is quite easy to get working with Clojure-mail as well:
+To make ProtonMail accounts work with locally running mail clients (like Thunderbird etc), Protonmail asks you to install [Protonmail Bridge](https://protonmail.com/bridge/), which serves acts as a customized proxy to access the mailservers. Given the seemingly endless security problems that can occur with IMAP/SMTP-configurations I think Protonmails solution is a usable one that gives me higher confidence in the security of the system.
+
+It's possible to get Clojure-mail to work with Protonmail Bridge like this:
 
 ```clojure
 (ns myproject.core
@@ -51,27 +48,32 @@ It is quite easy to get working with Clojure-mail as well:
 ;; Protonmail Bridge -> Account name -> Mailbox configuration
 
 (def hostname "127.0.0.1")
-(def port 1143) ;; could differ on your machine
-(def username "username@protonmail.com")
+(def port 1143) ;; could differ on your machine!
+(def username "your-username@protonmail.com")
 
 ;;; NOTE: This is a generated password used only locally
-;;; DONT put your precious protonmail password in your clojure code.
-(def password "password-generated-by-protonmail-bridge")
+;;; DO NOT put your precious protonmail password in your clojure code.
+(def protonmail-bridge-password "password-generated-by-protonmail-bridge")
 
 
-(def the-store (m/store "imap" [hostname port] username password))
+(def the-store (m/store "imap" [hostname port] username protonmail-bridge-password))
 
 ;; inbox returns a list of messages
-(m/inbox the-store)
+(def inbox-messages (m/inbox the-store))
 
 ;; how many messages in my inbox?
-(count (m/inbox the-store))
+(count inbox-messages)
 
-;; return a clojure data structure of the first mail in the inbox.
-(read-message (first (m/inbox the-store)))
+;; define a clojure data structure of the first mail in the inbox.
+(def latest (read-message (first inbox-messages))
+
+(:subject latest)
+
+(:keys latest)
+;; => (:id :to :cc :bcc :from :sender :subject :date-sent :date-recieved :multipart? :content-type :body :headers)
 ```
 
-## Getting started with Gmail + OAuth2
+## Getting started with Gmail + OAuth2 (unconfirmed after fork)
 
 The first thing we need is a mail store which acts as a gateway to our IMAP account.
 
@@ -137,7 +139,7 @@ An email message returned as a Clojure map from read-message looks something lik
 
 ```
 
-## Searching your inbox
+## Searching your inbox (unconfirmed after fork)
 
 You can easily search your inbox for messages
 
@@ -165,7 +167,7 @@ do any machine learning type processing on email messages.
 
 ```
 
-## Watching a folder
+## Watching a folder (unconfirmed after fork)
 
 Some IMAP servers allow the use of the IDLE command to receive push notifications when a folder changes.
 
@@ -203,6 +205,7 @@ Clojure mail can be used to parse existing email messages from file. Take a look
 
 
 ```clojure
+(require '[clojure-mail.core :as m])
 
 (def message (m/file->message "test/clojure_mail/fixtures/25"))
 
